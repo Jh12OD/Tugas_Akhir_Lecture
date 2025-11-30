@@ -1,0 +1,38 @@
+-- Tabel Users
+CREATE TABLE users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(50) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    role ENUM('admin', 'user', 'member') DEFAULT 'user',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Tabel Kategori Sampah
+CREATE TABLE categories (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(50) NOT NULL,
+    impact_factor FLOAT DEFAULT 0 -- Misal: gram plastik per item
+);
+
+-- Tabel Logs (Catatan Penggunaan)
+CREATE TABLE logs (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT,
+    category_id INT,
+    quantity INT NOT NULL,
+    log_date DATE NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id),
+    FOREIGN KEY (category_id) REFERENCES categories(id)
+);
+
+-- Data Dummy (Untuk Percobaan)
+INSERT INTO categories (name, impact_factor) VALUES 
+('Botol Plastik', 0.02), 
+('Kantong Kresek', 0.01), 
+('Sedotan', 0.005);
+
+-- Password default '123' (akan di-hash di aplikasi nyata, tapi untuk simpel kita plain text dulu atau gunakan password_hash di kode register)
+INSERT INTO users (username, password, role) VALUES 
+('admin', '$2y$10$abcdefg...', 'admin'), 
+('budi', '$2y$10$abcdefg...', 'user');
